@@ -39,6 +39,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private final TelegramBotSender telegramBotSender;
 
     private final String WELCOME_MESSAGE = "Greetings Stranger";
+    private final String SUCCESSFULLY_SAVED_RESPONSE = "Ваше напоминание успешно сохранено";
 
 
     @PostConstruct
@@ -69,6 +70,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             LocalDateTime.parse(rawDateTime, NOTIFICATION_DATE_TIME_FORMAT)
                     );
                     notificationTaskRepository.save(notificationTask);
+
+                    telegramBotSender.send(chatId, SUCCESSFULLY_SAVED_RESPONSE);
 
 
                 }
