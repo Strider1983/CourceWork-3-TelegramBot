@@ -73,7 +73,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
                     telegramBotSender.send(chatId, SUCCESSFULLY_SAVED_RESPONSE);
 
-
                 }
             }
         });
