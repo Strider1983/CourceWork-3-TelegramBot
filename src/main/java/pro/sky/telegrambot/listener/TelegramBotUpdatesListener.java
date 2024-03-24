@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pro.sky.telegrambot.job.NotificationSenderJob;
 import pro.sky.telegrambot.model.NotificationTask;
 import pro.sky.telegrambot.repository.NotificationTaskRepository;
 import pro.sky.telegrambot.service.TelegramBotSender;
@@ -25,13 +26,15 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private final Pattern INCOMING_MESSAGE_PATTERN = Pattern.compile("([0-9\\.\\:\\s]{16})(\\s)([\\W+]+)");
     private final DateTimeFormatter NOTIFICATION_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
-    public TelegramBotUpdatesListener(NotificationTaskRepository notificationTaskRepository, TelegramBot telegramBot, TelegramBotSender telegramBotSender) {
+    public TelegramBotUpdatesListener(NotificationTaskRepository notificationTaskRepository, NotificationSenderJob notificationSenderJob, TelegramBot telegramBot, TelegramBotSender telegramBotSender) {
         this.notificationTaskRepository = notificationTaskRepository;
+        this.notificationSenderJob = notificationSenderJob;
         this.telegramBot = telegramBot;
         this.telegramBotSender = telegramBotSender;
     }
 
     private final NotificationTaskRepository notificationTaskRepository;
+    private final NotificationSenderJob notificationSenderJob;
 
 
     private final TelegramBot telegramBot;
@@ -56,6 +59,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             if (message.equals("/start")) {
                 logger.info("message received: " + message);
                 telegramBotSender.send(chatId, WELCOME_MESSAGE);
+            } else if (message.equals("/clearAll")) {
+                notificationTaskRepository.deleteAll();
+                telegramBotSender.send(chatId, "Все записи удалены");
+
+            } else if (message.equals("/showAll")) {
+                List<NotificationTask> tasks = notificationSenderJob.getAllTasks();
+                telegramBotSender.send(chatId, tasks.toString());
             } else {
                 Matcher matcher = INCOMING_MESSAGE_PATTERN.matcher(message);
                 if (matcher.matches()) {

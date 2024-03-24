@@ -42,4 +42,9 @@ public class NotificationSenderJob {
 
 
     };
+    public List<NotificationTask> getAllTasks() {
+        return notificationTaskRepository.findAll();
+
+    }
+
 }

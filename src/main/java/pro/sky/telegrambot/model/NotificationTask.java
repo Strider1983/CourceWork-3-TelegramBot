@@ -72,11 +72,6 @@ public class NotificationTask {
 
     @Override
     public String  toString() {
-        return "NotificationTask{" +
-                "id=" + id +
-                ", chatId=" + chatId +
-                ", message='" + message + '\'' +
-                ", notificationDateTime=" + notificationDateTime +
-                '}';
+        return notificationDateTime + " - " + message;
     }
 }
