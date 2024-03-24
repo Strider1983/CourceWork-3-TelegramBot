@@ -68,6 +68,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             notificationText,
                             LocalDateTime.parse(rawDateTime, NOTIFICATION_DATE_TIME_FORMAT)
                     );
+                    notificationTaskRepository.save(notificationTask);
 
 
                 }
