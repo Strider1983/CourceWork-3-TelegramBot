@@ -42,6 +42,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private final TelegramBotSender telegramBotSender;
 
     private final String WELCOME_MESSAGE = "Greetings Stranger";
+    private final String CORRECT_MESSAGE_FORMAT = "дд.мм.гггг чч:мм Текст напоминания";
     private final String SUCCESSFULLY_SAVED_RESPONSE = "Ваше напоминание успешно сохранено";
 
 
@@ -83,6 +84,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
                     telegramBotSender.send(chatId, SUCCESSFULLY_SAVED_RESPONSE);
 
+                } else {
+                    logger.info("recieved message with incorrect format: "  +  message);
+                    telegramBotSender.send(chatId, "Напопинание должно соотвествовать формату: " + CORRECT_MESSAGE_FORMAT);
                 }
             }
         });
